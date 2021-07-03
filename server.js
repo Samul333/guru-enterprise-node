@@ -4,7 +4,8 @@ const app = express()
 const userRoute = require('./route/User');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
-const { BASE_URL } = require('../client/guru-application/src/configs/site.config');
+const { DOMAIN_NAME } = require('./configuration/config');
+
 
 
 app.use(cookieParser())
@@ -18,7 +19,7 @@ app.use(express.json())
 //       await sleep(2000)
 //       next()
 // })
-console.log(BASE_URL)
+console.log(DOMAIN_NAME)
 app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
