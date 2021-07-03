@@ -9,14 +9,14 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser())
 app.use(express.json())
 
-app.use(async function(req,res,next){
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-      }
+// app.use(async function(req,res,next){
+//     function sleep(ms) {
+//         return new Promise(resolve => setTimeout(resolve, ms));
+//       }
 
-      await sleep(2000)
-      next()
-})
+//       await sleep(2000)
+//       next()
+// })
 
 app.use(cors({
     credentials: true,
