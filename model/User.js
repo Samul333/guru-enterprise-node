@@ -112,7 +112,7 @@ userSchema.methods.sendVerificationEmail = async function(){
         from: 'samulshrestha97@gmail.com', // sender address
         to: user.email, // list of receivers
         subject: 'Verify your Email Address', // Subject line
-        html: `<p>Verify your email by going to the link. <a href='${DOMAIN_NAME}/api/v1/user/verify/${token}'>Click here </a></p>`// plain text body
+        html: `<p>Your Verification Process is almost completed. Verify your email by going to the link. <a href='${DOMAIN_NAME}api/v1/user/verify/${token}'>Click here </a></p>`// plain text body
       };
     
      transporter.sendMail(mailOptions, function (err, info) {

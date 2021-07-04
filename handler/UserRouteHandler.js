@@ -39,6 +39,7 @@ async function loginUser(req,res){
     try{
         const {email,password}= req.body
         const user = await User.findByCredentials(email,password)
+        if(!user.isVerified) throw new Error('The email has not been verified yet!')
         const token = await user.generateAuthToken()
   
         res.cookie('Gurutification', token,{httpOnly:true,secure:true,domain:'localhost'});
