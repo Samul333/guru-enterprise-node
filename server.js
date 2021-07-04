@@ -23,7 +23,7 @@ console.log(DOMAIN_NAME)
 app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
-    origin: ['http://localhost:8080','https://guru-finder.netlify.app/']
+    origin: ['http://localhost:8080','https://guru-finder.netlify.app']
 }))
 app.use('/api/v1/user',userRoute)
 const port = process.env.PORT || 3000;
