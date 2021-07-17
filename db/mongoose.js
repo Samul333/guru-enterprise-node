@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://Samul:killinginthenameof@cluster0.h638k.mongodb.net/guru-project?retryWrites=true&w=majority', 
+const { MONGODB_URI } = require('../configuration/config');
+mongoose.connect(MONGODB_URI, 
 {useNewUrlParser: true, useUnifiedTopology: true,useCreateIndex:true},()=>{
     console.log('The connection has been established')
 });

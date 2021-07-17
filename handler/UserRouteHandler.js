@@ -1,4 +1,5 @@
 
+const Profile = require('../model/Profile');
 const User = require('../model/User');
 const HelperClass = require('../utils/helper');
 
@@ -10,6 +11,10 @@ const HelperClass = require('../utils/helper');
         await user.sendVerificationEmail()
         console.log('After Email Sent')
         const resp = await user.save();
+        const profileData = new Profile({
+            userId:resp._id
+        });
+        await profileData.save();
         const token =  await resp.generateAuthToken()
         res.status(200).json({sucess:true,data:{user:resp,token}})
     }

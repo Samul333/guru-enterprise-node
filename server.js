@@ -2,6 +2,8 @@ const express = require('express')
 require('./db/mongoose');
 const app = express()
 const userRoute = require('./route/User');
+const profileRoute = require('./route/Profile');
+const searchRoute = require('./route/Search');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const { DOMAIN_NAME } = require('./configuration/config');
@@ -19,13 +21,15 @@ app.use(express.json())
 //       await sleep(2000)
 //       next()
 // })
-console.log(DOMAIN_NAME)
+
 app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     origin: ['http://localhost:8080','https://guru-finder.netlify.app']
 }))
 app.use('/api/v1/user',userRoute)
+app.use('/api/v1/profile',profileRoute)
+app.use('/api/v1/search',searchRoute)
 const port = process.env.PORT || 3000;
 
 
