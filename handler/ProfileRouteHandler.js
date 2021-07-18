@@ -1,6 +1,6 @@
 const Profile = require("../model/Profile");
 const { success, error } = require("../utils/response");
-
+const sharp = require('sharp')
 class ProfileController {
 
   // Only for test purpose
@@ -235,6 +235,111 @@ class ProfileController {
     }
   }
 
+  async uploadCredentials(req,res,next){
+    try{
+    
+      const profileData = await Profile.findOne ({ userId: req.user._id });
+      if(profileData.credentials.length>=2) throw new Error('Maximum amount of credentials Reached!')
+      profileData.credentials.push({image:req.file.buffer,description:req.body.description})
+      const savedData =  await profileData.save();
+      success({res,data:savedData})
+    }
+    catch(err){
+      error({res,message:err.message})
+    }
+    
+   }
+
+
+   async removeCredentials(req,res,next){
+    try{
+      const profileData = await Profile.findOne ({ userId: req.user._id }); 
+      profileData.credentials = profileData.credentials.filter(item=>{
+      return item._id != req.body.credId;
+     })
+
+     const savedData = await profileData.save();
+     success({ res, data: savedData });
+
+    }
+    catch(err){
+      error({res,message:err.message})
+    }
+
+   }
+
+
+   async uploadAvatar(req,res,next){
+
+    try{
+      const buffer = await sharp(req.file.buffer).resize({width:250,height:250}).png().toBuffer()
+      const profileData = await Profile.findOne ({ userId: req.user._id });
+      profileData.avatar = buffer;
+      const savedData =  await profileData.save();
+      success({res,data:savedData})
+    }
+    catch(err){
+      error({res,message:err.message})
+    }
+
+
+   }
+
+
+   async addEmployment(req,res,next){
+
+      try{
+        const profileData = await Profile.findOne({ userId: req.user._id });
+        profileData.employment.push(req.body);
+        const savedData = await profileData.save();
+        res.status(200).send({ success: true, data: savedData });
+      }
+      catch(err){
+        error({res,message:err.message})
+      }
+
+   }
+
+   async editEmployment(req,res,next){
+    try{
+      const profileData = await Profile.findOne({ userId: req.user._id });
+      profileData.employment.forEach(item=>{
+    if(item._id==req.body.empId){
+
+          item.role = req.body.role;
+          item.timeFrame = req.body.timeFrame;
+          item.jobDescription = req.body.jobDescription;
+          item.company = req.body.company
+
+        }
+      
+      })
+      
+      const savedData = await profileData.save();
+      success({ res, data: savedData });
+    }
+    catch(err){
+      error({res,message:err.message})
+    }
+
+   }
+   
+
+   async deleteEmployment(req,res,next){
+    try{
+      const profileData = await Profile.findOne ({ userId: req.user._id }); 
+      profileData.employment = profileData.employment.filter(item=>{
+      return item._id != req.body.empId;
+     })
+
+     const savedData = await profileData.save();
+     success({ res, data: savedData });
+
+    }
+    catch(err){
+      error({res,message:err.message})
+    }
+   }
 }
 
 module.exports = new ProfileController();

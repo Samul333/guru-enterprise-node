@@ -1,4 +1,5 @@
 
+const { DOMAIN } = require('../configuration/config');
 const Profile = require('../model/Profile');
 const User = require('../model/User');
 const HelperClass = require('../utils/helper');
@@ -6,14 +7,18 @@ const HelperClass = require('../utils/helper');
  async function  createNewUser(req,res){
     const body = req.body
     const user = new User(body);
-
+    let profileData;
     try{
         await user.sendVerificationEmail()
         console.log('After Email Sent')
         const resp = await user.save();
-        const profileData = new Profile({
-            userId:resp._id
-        });
+        
+        if(resp.user_type===1){
+            profileData = new Profile({
+                userId:resp._id
+             });
+        }
+       
         await profileData.save();
         const token =  await resp.generateAuthToken()
         res.status(200).json({sucess:true,data:{user:resp,token}})
@@ -30,7 +35,6 @@ async function getAllUsers(req,res){
 
     try{
         const users = await User.find({});
-        console.log(users)
         res.status(200).json({success:true,data:{users:users}})
     }
     catch(err){
@@ -42,12 +46,13 @@ async function getAllUsers(req,res){
 
 async function loginUser(req,res){
     try{
+        console.log(DOMAIN)
         const {email,password}= req.body
         const user = await User.findByCredentials(email,password)
         if(!user.isVerified) throw new Error('The email has not been verified yet!')
         const token = await user.generateAuthToken()
   
-        res.cookie('Gurutification', token,{httpOnly:true,secure:true,domain:'localhost'});
+        res.cookie('Gurutification', token,{httpOnly:true,secure:true,domain:DOMAIN});
         res.status(200).send({success:true,user,token,auth:true})
     }
     catch(err){

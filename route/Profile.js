@@ -2,7 +2,29 @@
 const Profile = require('../model/Profile');
 const ProfileController = require('../handler/ProfileRouteHandler');
 const auth = require('../middleware/auth');
-const route = require('express').Router() 
+const route = require('express').Router();
+const multer = require('multer')
+
+const upload = multer({
+    limits:{
+        fileSize:1000000
+    },
+    fileFilter(req,file,cb){
+        
+        if(!file.originalname.match(/\.(png|jpg|jpeg)$/)){
+
+          return cb(new Error('The File Type is not supported'))
+
+        }
+
+        cb(undefined,true)
+        
+        
+    }
+})
+
+
+
 
 
 route.get('/',auth, ProfileController.getProfile )
@@ -26,7 +48,17 @@ route.post('/education', auth, ProfileController.addEduction)
 route.patch('/education',auth,ProfileController.editEducation)
 route.delete('/education', auth,ProfileController.deleteEducation)
 
+//Upload Credentials
+route.post('/upload/certification',auth,upload.single('image'), ProfileController.uploadCredentials)
+route.delete('/upload/certification',auth,ProfileController.removeCredentials)
 
+
+route.post('/employment',auth,ProfileController.addEmployment)
+route.patch('/employment',auth,ProfileController.editEmployment)
+route.delete('/employment',auth,ProfileController.deleteEmployment)
+
+// route.post('/upload/avatar',auth,upload.single('image'), ProfileController.uploadAvatar)
+route.post('/upload/avatar',auth,upload.single('image'), ProfileController.uploadAvatar)
 route.get('/test',async(req,res)=>{
 
     const profileData = new Profile({

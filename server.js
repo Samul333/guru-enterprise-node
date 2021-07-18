@@ -6,13 +6,23 @@ const profileRoute = require('./route/Profile');
 const searchRoute = require('./route/Search');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
-const { DOMAIN_NAME } = require('./configuration/config');
-
-
+const compression = require('compression')
 
 app.use(cookieParser())
 app.use(express.json())
+app.use(compression({
+    level:6,
+    threshold:20*1000,
+    filter:(req,res)=>{
+        if(req.header['x-no-compression']){
+            return false
+        }
 
+        return compression.filter(req,res)
+    }
+
+}
+))
 // app.use(async function(req,res,next){
 //     function sleep(ms) {
 //         return new Promise(resolve => setTimeout(resolve, ms));
@@ -21,6 +31,7 @@ app.use(express.json())
 //       await sleep(2000)
 //       next()
 // })
+
 
 app.use(cors({
     credentials: true,

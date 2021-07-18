@@ -10,6 +10,10 @@ const profileSchema = mongoose.Schema({
         unique:true
     },
 
+    avatar:{
+        type:Buffer
+    },
+
     languages:[{
 
         name:{
@@ -75,7 +79,37 @@ const profileSchema = mongoose.Schema({
             unique:true,
 
         }
-    ]
+    ],
+    credentials:[{
+        image:Buffer,
+        description:String
+    }],
+
+    employment:[{
+        role:{
+            type:String,
+            required:true,
+            trim:true
+        },
+
+        timeFrame:{
+            type:String,
+            required:true,
+            trim:true
+        },
+        company:{
+            type:String,
+            required:true,
+            trim:true
+        },
+
+        jobDescription:{
+            type:String,
+            required:true,
+            trim:true
+        }
+
+    }]
 
 
 },{ timestamps: true })
